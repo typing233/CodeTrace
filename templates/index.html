@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ profile.name }}的个人作品集，展示技术技能、项目经验和联系方式。{{ profile.tagline }}">
+    <meta name="keywords" content="全栈开发, Python, FastAPI, 程序员, 个人网站, 作品集, 技术博客">
+    <meta name="author" content="{{ profile.name }}">
+    <meta name="robots" content="index, follow">
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="{{ profile.name }} - 个人作品集">
+    <meta property="og:description" content="{{ profile.tagline }}">
+    <meta property="og:site_name" content="{{ profile.name }}的个人网站">
+    
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="{{ profile.name }} - 个人作品集">
+    <meta name="twitter:description" content="{{ profile.tagline }}">
+    
+    <title>{{ profile.name }} - 个人作品集</title>
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+            }
+        })();
+    </script>
+</head>
+<body>
+    <a href="#main-content" class="skip-link">跳转到主要内容</a>
+    
+    <header class="header" role="banner">
+        <nav class="nav" role="navigation" aria-label="主导航">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">{{ profile.name }}</a>
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#about" class="nav-link">关于我</a></li>
+                <li><a href="#skills" class="nav-link">技能</a></li>
+                <li><a href="#projects" class="nav-link">项目</a></li>
+                <li><a href="#contact" class="nav-link">联系</a></li>
+            </ul>
+            <div class="nav-actions">
+                <button class="theme-toggle" id="themeToggle" aria-label="切换日/夜模式">
+                    <span class="theme-icon sun" aria-hidden="true">☀️</span>
+                    <span class="theme-icon moon" aria-hidden="true">🌙</span>
+                </button>
+                <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="菜单" aria-expanded="false">
+                    <span class="hamburger" aria-hidden="true"></span>
+                </button>
+            </div>
+        </nav>
+    </header>
+    
+    <main id="main-content" role="main">
+        <section id="about" class="section hero-section" aria-labelledby="hero-title">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <div class="avatar-wrapper" id="avatarWrapper">
+                        <input type="file" id="avatarInput" accept="image/*" class="avatar-input" aria-label="选择头像图片">
+                        {% if profile.avatar %}
+                        <img src="{{ profile.avatar }}" alt="{{ profile.name }}的头像" class="avatar" id="avatarImage">
+                        {% else %}
+                        <div class="avatar-placeholder" aria-hidden="true" id="avatarPlaceholder">
+                            <span class="avatar-initials">{{ profile.name[0] if profile.name else '?' }}</span>
+                        </div>
+                        <img src="" alt="{{ profile.name }}的头像" class="avatar" id="avatarImage" style="display: none;">
+                        {% endif %}
+                        <div class="avatar-overlay" id="avatarOverlay">
+                            <span class="avatar-overlay-icon" aria-hidden="true">📷</span>
+                            <span class="avatar-overlay-text">更换头像</span>
+                        </div>
+                        <div class="avatar-loading" id="avatarLoading" style="display: none;">
+                            <div class="avatar-spinner" aria-hidden="true"></div>
+                            <span class="avatar-loading-text">上传中...</span>
+                        </div>
+                    </div>
+                    <h1 id="hero-title" class="hero-title">{{ profile.name }}</h1>
+                    <p class="hero-tagline">{{ profile.tagline }}</p>
+                    <p class="hero-bio">{{ profile.bio }}</p>
+                    <div class="hero-actions">
+                        <a href="#projects" class="btn btn-primary">查看项目</a>
+                        <a href="#contact" class="btn btn-secondary">联系我</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="skills" class="section skills-section" aria-labelledby="skills-title">
+            <div class="container">
+                <header class="section-header">
+                    <h2 id="skills-title" class="section-title">专业技能</h2>
+                    <p class="section-subtitle">多年积累的技术栈和工具经验</p>
+                </header>
+                <div class="skills-grid" role="list">
+                    {% for skill in profile.skills %}
+                    <div class="skill-item" role="listitem" data-category="{{ skill.category }}">
+                        <span class="skill-name">{{ skill.name }}</span>
+                        <span class="skill-category">{{ skill.category }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="section projects-section" aria-labelledby="projects-title">
+            <div class="container">
+                <header class="section-header">
+                    <h2 id="projects-title" class="section-title">精选项目</h2>
+                    <p class="section-subtitle">我参与和主导的一些有趣项目</p>
+                </header>
+                <div class="projects-grid" role="list">
+                    {% for project in profile.projects %}
+                    <article class="project-card" role="listitem">
+                        <div class="project-image" aria-hidden="true">
+                            {% if project.image %}
+                            <img src="{{ project.image }}" alt="{{ project.title }}">
+                            {% else %}
+                            <div class="project-image-placeholder">
+                                <span class="project-icon">💻</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="project-content">
+                            <h3 class="project-title">{{ project.title }}</h3>
+                            <p class="project-description">{{ project.description }}</p>
+                            <div class="project-tech" aria-label="技术栈">
+                                {% for tech in project.tech_stack %}
+                                <span class="tech-tag">{{ tech }}</span>
+                                {% endfor %}
+                            </div>
+                            {% if project.link %}
+                            <div class="project-actions">
+                                <a href="{{ project.link }}" class="project-link" target="_blank" rel="noopener noreferrer">
+                                    查看项目
+                                    <span class="link-icon" aria-hidden="true">→</span>
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="section contact-section" aria-labelledby="contact-title">
+            <div class="container">
+                <header class="section-header">
+                    <h2 id="contact-title" class="section-title">联系方式</h2>
+                    <p class="section-subtitle">期待与你交流，欢迎随时联系</p>
+                </header>
+                <div class="contact-grid">
+                    {% if profile.contact.email %}
+                    <a href="mailto:{{ profile.contact.email }}" class="contact-card">
+                        <div class="contact-icon" aria-hidden="true">📧</div>
+                        <div class="contact-info">
+                            <h3 class="contact-type">邮箱</h3>
+                            <p class="contact-value">{{ profile.contact.email }}</p>
+                        </div>
+                    </a>
+                    {% endif %}
+                    
+                    {% if profile.contact.github %}
+                    <a href="{{ profile.contact.github }}" class="contact-card" target="_blank" rel="noopener noreferrer">
+                        <div class="contact-icon" aria-hidden="true">🐙</div>
+                        <div class="contact-info">
+                            <h3 class="contact-type">GitHub</h3>
+                            <p class="contact-value">查看我的代码仓库</p>
+                        </div>
+                    </a>
+                    {% endif %}
+                    
+                    {% if profile.contact.wechat %}
+                    <div class="contact-card">
+                        <div class="contact-icon" aria-hidden="true">💬</div>
+                        <div class="contact-info">
+                            <h3 class="contact-type">微信</h3>
+                            <p class="contact-value">{{ profile.contact.wechat }}</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    {% if profile.contact.website %}
+                    <a href="{{ profile.contact.website }}" class="contact-card" target="_blank" rel="noopener noreferrer">
+                        <div class="contact-icon" aria-hidden="true">🌐</div>
+                        <div class="contact-info">
+                            <h3 class="contact-type">博客/网站</h3>
+                            <p class="contact-value">了解更多</p>
+                        </div>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="footer" role="contentinfo">
+        <div class="container footer-container">
+            <p class="copyright">&copy; {{ profile.name }}. 保留所有权利。</p>
+            <p class="built-with">用 ❤️ 和 Python 构建</p>
+        </div>
+    </footer>
+    
+    <button class="back-to-top" id="backToTop" aria-label="回到顶部" aria-hidden="true">
+        <span aria-hidden="true">↑</span>
+    </button>
+    
+    <script src="/static/js/app.js"></script>
+    
+
+</body>
+</html>
